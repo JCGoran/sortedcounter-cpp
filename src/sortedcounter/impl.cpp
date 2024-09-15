@@ -1,6 +1,5 @@
 #include <map>
 #include <initializer_list>
-#include <iostream>
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/vector.h>
