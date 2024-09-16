@@ -6,6 +6,7 @@ authors = [
 description = "Sorted version of collections.Counter"
 dynamic = ["version"]
 requires-python = ">=3.8,<3.13"
+optional-dependencies.dev = ["cmake-format", "clang-format"]
 
 [build-system]
 requires = [
