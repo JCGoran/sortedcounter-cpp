@@ -29,15 +29,26 @@ jobs:
 
       # if we're not doing a release version (manual!), only build one python version
       - name: Setup versions
-        if: ${{ ! (github.event_name == 'workflow_dispatch' && github.event.inputs.version) }}
+        if: ${{ ! (github.event_name == 'workflow_dispatch' && github.event.inputs.version) && runner.os != 'Windows' }}
         run: |
           echo "CIBW_BUILD=cp311-*" >> "$GITHUB_ENV"
           # pretend version so setuptools doesn't fail
           echo "SETUPTOOLS_SCM_PRETEND_VERSION=0.1.0" >> "$GITHUB_ENV"
 
+      - name: Setup versions (Windows)
+        if: ${{ ! (github.event_name == 'workflow_dispatch' && github.event.inputs.version) && runner.os == 'Windows' }}
+        run: |
+          echo "CIBW_BUILD=cp311-*" >> "$env:GITHUB_ENV"
+          # pretend version so setuptools doesn't fail
+          echo "SETUPTOOLS_SCM_PRETEND_VERSION=0.1.0" >> "$env:GITHUB_ENV"
+
       - name: SCM
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.version
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.version && runner.os != 'Windows'
         run: echo "SETUPTOOLS_SCM_PRETEND_VERSION=${{ github.event.input.version }}" >> "$GITHUB_ENV"
+
+      - name: SCM (Windows)
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.version && runner.os != 'Windows'
+        run: echo "SETUPTOOLS_SCM_PRETEND_VERSION=${{ github.event.input.version }}" >> "$env:GITHUB_ENV"
 
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse
