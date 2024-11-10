@@ -7,7 +7,7 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      release:
+      branch:
         description: 'Release branch/commit'
         default: 'release/x.y'
         required: true
@@ -30,10 +30,19 @@ jobs:
         os: [ubuntu-latest, macos-13, macos-14, windows-latest]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out code
+        if: github.event_name != 'workflow_dispatch'
+        uses: actions/checkout@v4
+
+      - name: Check out code for release
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.inputs.branch }}
 
       # Used to host cibuildwheel
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
 
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==2.16.5
@@ -74,6 +83,9 @@ jobs:
 
   pypi-publish:
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.upload == 'true'
+    needs:
+      - build_wheels
+
     name: Upload release to PyPI
     runs-on: ubuntu-latest
     strategy:
