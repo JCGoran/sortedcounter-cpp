@@ -10,11 +10,13 @@ rng = np.random.default_rng(4092)
 data_size = 1_000
 data = rng.integers(-10, 10, data_size)
 
+
 def test_basics():
     tree = SortedCounter(data)
     assert len(tree) == len(data)
     assert tree.maximum() == max(data)
     assert tree.minimum() == min(data)
+
 
 def test_addition():
     tree = SortedCounter(data)
@@ -22,6 +24,7 @@ def test_addition():
     size = 10
     tree.add(data[0], size)
     assert len(tree_copy) + size == len(tree)
+
 
 def test_delitem():
     tree = SortedCounter([1, 2, 3, 3])
@@ -34,3 +37,9 @@ def test_delitem():
     tree.remove(2)
     tree.remove(1)
     assert len(tree) == 0
+
+
+def test_to_dict():
+    d = {1: 2, 3: 4}
+    result = SortedCounter(d)
+    assert result.to_dict() == d

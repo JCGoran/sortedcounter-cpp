@@ -32,7 +32,8 @@ private:
   // Helper to identify map-like containers
   template <typename MapType>
   using is_map_container =
-      std::conjunction<std::is_same<typename MapType::mapped_type, int>>;
+      std::disjunction<std::is_same<MapType, std::unordered_map<T, int>>,
+                       std::is_same<MapType, std::map<T, int>>>;
 
   // template for STL array-like types
   template <typename Container>

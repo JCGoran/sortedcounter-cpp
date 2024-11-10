@@ -16,10 +16,10 @@ NB_MODULE(sortedcounter, my_module) {
   using ValueSortedCounter = SortedCounter<value_type>;
   nb::class_<ValueSortedCounter>(my_module, "SortedCounter")
       .def(nb::init<>())
+      .def(nb::init<std::unordered_map<value_type, int>>())
+      .def(nb::init<std::map<value_type, int>>())
       .def(nb::init<std::vector<value_type>>())
       .def(nb::init<std::set<value_type>>())
-      .def(nb::init<std::map<value_type, int>>())
-      .def(nb::init<std::unordered_map<value_type, int>>())
       .def("maximum", &ValueSortedCounter::maximum)
       .def("minimum", &ValueSortedCounter::minimum)
       .def("__copy__", &ValueSortedCounter::copy)
@@ -44,11 +44,11 @@ NB_MODULE(sortedcounter, my_module) {
            })
       .def("add", &ValueSortedCounter::add, "key"_a, "times"_a = 1)
       .def("remove", &ValueSortedCounter::remove, "key"_a, "times"_a = 1)
-      .def("extend", &ValueSortedCounter::extend<std::vector<value_type>>)
-      .def("extend", &ValueSortedCounter::extend<std::set<value_type>>)
       .def("extend", &ValueSortedCounter::extend<std::map<value_type, int>>)
       .def("extend",
            &ValueSortedCounter::extend<std::unordered_map<value_type, int>>)
+      .def("extend", &ValueSortedCounter::extend<std::vector<value_type>>)
+      .def("extend", &ValueSortedCounter::extend<std::set<value_type>>)
       .def(
           "to_dict",
           [](const ValueSortedCounter &c) {
