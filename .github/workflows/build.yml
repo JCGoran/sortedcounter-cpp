@@ -47,7 +47,7 @@ jobs:
         run: echo "SETUPTOOLS_SCM_PRETEND_VERSION=${{ github.event.input.version }}" >> "$GITHUB_ENV"
 
       - name: SCM (Windows)
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.version && runner.os != 'Windows'
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.version && runner.os == 'Windows'
         run: echo "SETUPTOOLS_SCM_PRETEND_VERSION=${{ github.event.input.version }}" >> "$env:GITHUB_ENV"
 
       - name: Build wheels
