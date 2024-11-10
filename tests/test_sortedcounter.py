@@ -43,3 +43,8 @@ def test_to_dict():
     d = {1: 2, 3: 4}
     result = SortedCounter(d)
     assert result.to_dict() == d
+
+def test_getitem():
+    result = SortedCounter()
+    with pytest.raises(IndexError):
+        result[1]

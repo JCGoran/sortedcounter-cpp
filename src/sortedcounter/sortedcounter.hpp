@@ -170,5 +170,5 @@ public:
   const map_type &data() const { return m_container; }
 
   // return the number of occurrences of element \c key
-  size_type get(const T &key) { return m_container[key]; }
+  size_type get(const T &key) { return m_container.at(key); }
 };
