@@ -60,6 +60,19 @@ private:
     }
   }
 
+  template <typename Container>
+  void _extend(const Container &items, SequenceTag) {
+    for (const auto &item : items) {
+      add(item);
+    }
+  }
+
+  template <typename MapType> void _extend(const MapType &items, MapTag) {
+    for (const auto &[key, value] : items) {
+      add(key, value);
+    }
+  }
+
 public:
   // default ctor
   SortedCounter() = default;
@@ -68,9 +81,7 @@ public:
   ~SortedCounter() = default;
 
   // return a copy of the current instance (used for Python interface)
-  SortedCounter copy() const {
-      return *this;
-  }
+  SortedCounter copy() const { return *this; }
 
   // ctor for sequence types
   template <typename Container>
@@ -120,23 +131,19 @@ public:
     }
   }
 
-  // template for adding new items to the container
-  template <typename Container,
-            typename = std::enable_if_t<
-                std::is_same_v<typename Container::value_type,
-                               typename std::vector<T>::value_type> ||
-                std::is_same_v<typename Container::value_type,
-                               typename std::initializer_list<T>::value_type>>>
-  void extend(const Container &items) {
-    for (const auto &item : items) {
-      const auto present = m_container.count(item);
-      if (!present) {
-        m_container[item] = 1;
-      } else {
-        m_container[item] += 1;
-      }
-      ++m_size;
-    }
+  // template for adding new items to the container from a vector
+  template <typename Container>
+  void
+  extend(const Container &items,
+         std::enable_if_t<is_sequence_container<Container>::value, int> = 0) {
+    _extend(items, SequenceTag{});
+  }
+
+  // template for adding new items to the container from a map
+  template <typename Container>
+  void extend(const Container &items,
+              std::enable_if_t<is_map_container<Container>::value, int> = 0) {
+    _extend(items, MapTag{});
   }
 
   // return the maximum element in the container

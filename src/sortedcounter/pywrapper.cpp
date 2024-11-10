@@ -44,5 +44,9 @@ NB_MODULE(sortedcounter, my_module) {
            })
       .def("add", &ValueSortedCounter::add, "key"_a, "times"_a = 1)
       .def("remove", &ValueSortedCounter::remove, "key"_a, "times"_a = 1)
-      .def("extend", &ValueSortedCounter::extend<std::vector<value_type>>);
+      .def("extend", &ValueSortedCounter::extend<std::vector<value_type>>)
+      .def("extend", &ValueSortedCounter::extend<std::set<value_type>>)
+      .def("extend", &ValueSortedCounter::extend<std::map<value_type, int>>)
+      .def("extend",
+           &ValueSortedCounter::extend<std::unordered_map<value_type, int>>);
 }
