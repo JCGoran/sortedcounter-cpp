@@ -48,5 +48,15 @@ NB_MODULE(sortedcounter, my_module) {
       .def("extend", &ValueSortedCounter::extend<std::set<value_type>>)
       .def("extend", &ValueSortedCounter::extend<std::map<value_type, int>>)
       .def("extend",
-           &ValueSortedCounter::extend<std::unordered_map<value_type, int>>);
+           &ValueSortedCounter::extend<std::unordered_map<value_type, int>>)
+      .def(
+          "to_dict",
+          [](const ValueSortedCounter &c) {
+            nb::dict result;
+            for (const auto &[key, value] : c.data()) {
+              result[nb::cast(key)] = nb::cast(value);
+            }
+            return result;
+          },
+          "Return a copy of the SortedCounter as a dictionary");
 }
