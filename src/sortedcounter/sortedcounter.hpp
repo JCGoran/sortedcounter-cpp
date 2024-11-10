@@ -67,14 +67,19 @@ public:
   // default dtor
   ~SortedCounter() = default;
 
-  // Constructor for sequence types
+  // return a copy of the current instance (used for Python interface)
+  SortedCounter copy() const {
+      return *this;
+  }
+
+  // ctor for sequence types
   template <typename Container>
   explicit SortedCounter(
       const Container &items,
       std::enable_if_t<is_sequence_container<Container>::value, int> = 0)
       : SortedCounter(items, SequenceTag{}) {}
 
-  // Constructor for map types
+  // ctor for map types
   template <typename MapType>
   explicit SortedCounter(
       const MapType &items,

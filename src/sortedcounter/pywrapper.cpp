@@ -22,6 +22,8 @@ NB_MODULE(sortedcounter, my_module) {
       .def(nb::init<std::unordered_map<value_type, int>>())
       .def("maximum", &ValueSortedCounter::maximum)
       .def("minimum", &ValueSortedCounter::minimum)
+      .def("__copy__", &ValueSortedCounter::copy)
+      .def("__deepcopy__", &ValueSortedCounter::copy)
       .def("__getitem__", &ValueSortedCounter::get)
       .def("__len__", &ValueSortedCounter::size)
       .def("__repr__",
