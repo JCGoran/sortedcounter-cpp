@@ -7,8 +7,19 @@ on:
       - main
   workflow_dispatch:
     inputs:
+      release:
+        description: 'Release branch/commit'
+        default: 'release/x.y'
+        required: true
       version:
         description: 'The version of SortedCounter to release'
+        default: 'x.y.z'
+        required: true
+      upload:
+        description: 'Whether to upload to PyPI or not'
+        default: 'false'
+        required: false
+        type: 'boolean'
 
 jobs:
   build_wheels:
@@ -59,3 +70,34 @@ jobs:
         with:
           name: cibw-wheels-${{ matrix.os }}
           path: ./wheelhouse/*.whl
+
+
+  pypi-publish:
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.upload == 'true'
+    name: Upload release to PyPI
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os-name: [ubuntu-latest, macos-13, macos-14, windows-latest]
+
+    environment:
+      name: pypi
+      url: https://pypi.org/p/SortedCounterCPP
+
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+
+    steps:
+
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: cibw-wheels-${{ matrix.os-name }}
+        path: wheelhouse/
+
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        packages-dir: wheelhouse/
+        repository-url: https://test.pypi.org/legacy/
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
