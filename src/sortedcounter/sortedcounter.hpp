@@ -103,8 +103,7 @@ public:
     if (times <= 0) {
       throw std::invalid_argument("Cannot add <= 0 items to container");
     }
-    const auto present = m_container.count(key);
-    if (!present) {
+    if (!m_container.count(key)) {
       m_container[key] = times;
     } else {
       m_container[key] += times;
