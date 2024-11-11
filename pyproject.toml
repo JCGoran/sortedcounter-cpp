@@ -4,6 +4,7 @@ authors = [
     {name = "JCGoran", email = "jcgoran@protonmail.com"},
 ]
 description = "Sorted version of collections.Counter, implemented in C++"
+readme = "README.md"
 dynamic = ["version"]
 requires-python = ">=3.9,<3.14"
 optional-dependencies.dev = ["cmake-format", "clang-format"]
